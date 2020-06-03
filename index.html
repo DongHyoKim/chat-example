@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Socket.IO chat</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font: 13px Helvetica, Arial;
+            }
+            form {
+                background: #000;
+                padding: 3px;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+            form input {
+                border: 0;
+                padding: 10px;
+                width: 90%;
+                margin-right: 0.5%;
+            }
+            form button {
+                width: 9%;
+                background: rgb(130, 224, 255);
+                border: none;
+                padding: 10px;
+            }
+            #messages {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+            #messages li {
+                padding: 5px 10px;
+            }
+            #messages li:nth-child(odd) {
+                background: #eee;
+            }
+            #myImageId {
+                display: none;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script>
+            $(function () {
+                var socket = io();
+                var audio = new Audio("/static/sounds/NewsIntro.mp3");
+                $("form").submit(function (e) {
+                    e.preventDefault(); // prevents page reloading
+                    socket.emit("chat message", $("#m").val());
+                    $("#m").val("");
+                    return false;
+                });
+                socket.on("chat message", function (msg) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    $("#messages").append($("<li>").text(msg));
+                    jQuery("#myImageId").fadeIn(1000);
+                    audio.play();
+                    jQuery("#myImageId").fadeOut(3000);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+        <div id="myImageId">
+            <img src="/static/images/order.jpg" width="1300" height="600" />
+        </div>
+    </body>
+</html>
