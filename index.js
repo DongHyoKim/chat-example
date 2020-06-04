@@ -21,7 +21,7 @@ io.on("connection", (socket) => {
     console.log(users);
     socket.on("chat message", (msg) => {
         io.emit("chat message", msg);
-        console.log("ID] " + socket.id + ":" + msg);
+        console.log("ID " + socket.id + ":" + msg);
     });
 });
 
